@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:to_imaginemos_app/models/models.dart';
 import 'package:to_imaginemos_app/screens/note_screen.dart';
-
 import 'package:to_imaginemos_app/services/services.dart';
 import 'package:to_imaginemos_app/widgets/widgets.dart';
 
@@ -14,7 +13,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final NoteService _noteService = NoteService();
-  String? _selectedCategory = 'todas'; // Valor inicial para la categoría
+  String? _selectedCategory = 'todas';
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = ''; // Almacena el texto de búsqueda
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text(
           'Tus notas',
-          style: TextStyle(
-            fontSize: 20,
-            color: Colors.white,
-          ), // Reducir el tamaño del título
+          style: TextStyle(fontSize: 20, color: Colors.white),
         ),
         leading: IconButton(
           icon: Icon(Icons.logout),
@@ -34,13 +32,12 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
         actions: [
-          // Contenedor con fondo blanco para el DropdownButton
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: Container(
               padding: const EdgeInsets.only(left: 12.0, right: 8.0),
               decoration: BoxDecoration(
-                color: Colors.white, // Fondo blanco
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(
@@ -55,55 +52,113 @@ class _HomeScreenState extends State<HomeScreen> {
                 items: const [
                   DropdownMenuItem(
                     value: 'personal',
-                    child: Text('personal'),
+                    child: Row(
+                      children: [
+                        Icon(Icons.person,
+                            color: Colors.blue), // Ícono para "personal"
+                        SizedBox(width: 8), // Espaciado entre ícono y texto
+                        Text('Personal'),
+                      ],
+                    ),
                   ),
                   DropdownMenuItem(
                     value: 'trabajo',
-                    child: Text('trabajo'),
+                    child: Row(
+                      children: [
+                        Icon(Icons.work,
+                            color: Colors.green), // Ícono para "trabajo"
+                        SizedBox(width: 8),
+                        Text('Trabajo'),
+                      ],
+                    ),
                   ),
                   DropdownMenuItem(
                     value: 'idea',
-                    child: Text('idea'),
+                    child: Row(
+                      children: [
+                        Icon(Icons.lightbulb_outline,
+                            color: Colors.orange), // Ícono para "idea"
+                        SizedBox(width: 8),
+                        Text('Idea'),
+                      ],
+                    ),
                   ),
                   DropdownMenuItem(
                     value: 'todas',
-                    child: Text('todas'),
+                    child: Row(
+                      children: [
+                        Icon(Icons.all_inclusive,
+                            color: Colors.purple), // Ícono para "todas"
+                        SizedBox(width: 8),
+                        Text('Todas'),
+                      ],
+                    ),
                   ),
                 ],
                 onChanged: (value) {
                   setState(() {
-                    _selectedCategory = value; // Actualizar categoría seleccionada
+                    _selectedCategory = value;
                   });
-                  print("Categoría seleccionada: $value");
                 },
-                hint: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 8.0), // Agrega espacio horizontal al hint
-                  child: Text('Categoría'),
-                ),
-                icon: Icon(Icons.arrow_downward),
-                underline: SizedBox(), // Eliminar la línea debajo del Dropdown
+                underline: SizedBox(),
               ),
             ),
           ),
         ],
       ),
-      body: StreamBuilder<List<Note>>(
-        stream: _noteService.getNotes(category: _selectedCategory), // Pasar la categoría seleccionada
-        builder: (context, snapshot) {
-          if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-          if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
-          }
-          final notes = snapshot.data!;
-          return ListView.builder(
-            itemCount: notes.length,
-            itemBuilder: (context, index) {
-              final note = notes[index];
-              return NoteCard(note: note);
-            },
-          );
-        },
+      body: Column(
+        children: [
+          // Barra de búsqueda
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                labelText: 'Buscar nota',
+                hintText: 'lo que buscas es a Andres...',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value; // Actualiza la búsqueda
+                });
+              },
+            ),
+          ),
+          // Lista de notas
+          Expanded(
+            child: StreamBuilder<List<Note>>(
+              stream: _noteService.getNotes(category: _selectedCategory),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                // Filtra las notas basadas en la consulta de búsqueda
+                final notes = snapshot.data!.where((note) {
+                  final query = _searchQuery.toLowerCase();
+                  return note.title.toLowerCase().contains(query) ||
+                      note.body.toLowerCase().contains(query);
+                }).toList();
+
+                // Muestra un mensaje si no hay coincidencias
+                if (notes.isEmpty) {
+                  return Center(child: Text('no hay notas por aqui...'));
+                }
+                return ListView.builder(
+                  itemCount: notes.length,
+                  itemBuilder: (context, index) {
+                    final note = notes[index];
+                    return NoteCard(note: note);
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
