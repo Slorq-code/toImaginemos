@@ -83,11 +83,11 @@ class _NoteScreenState extends State<NoteScreen> {
                   return null;
                 },
               ),
-              const SizedBox(height: 20.0),
+              const SizedBox(height: 11.0),
               TextFormField(
                 controller: _bodyController,
                 decoration: const InputDecoration(labelText: 'Contenido'),
-                maxLines: 12,
+                maxLines: 5,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor ingresa el contenido';

@@ -4,7 +4,7 @@ import 'package:to_imaginemos_app/BLoC/auth/auth_bloc.dart';
 
 class NoteService {
   final CollectionReference _notesCollection =
-      FirebaseFirestore.instance.collection('notas');
+      FirebaseFirestore.instance.collection('notasAppAndres');
   final AuthService _authService = AuthService();
 
   Future<String?> _getUserUid() async {
