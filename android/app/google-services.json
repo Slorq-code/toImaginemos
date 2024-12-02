@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "319211347055",
+    "project_id": "toimaginemos",
+    "storage_bucket": "toimaginemos.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319211347055:android:025404d955d15bd182419a",
+        "android_client_info": {
+          "package_name": "com.example.to_imaginemos_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdhDn_2v5Yr4LfSrTeUNo_g6piS74vmH8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
