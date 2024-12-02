@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:to_imaginemos_app/BLoC/auth/auth_service.dart';
 import 'package:to_imaginemos_app/screens/note_screen.dart';
 import 'package:to_imaginemos_app/screens/screens.dart';
-import 'package:to_imaginemos_app/services/services.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   FirebaseOptions firebaseOptions = FirebaseOptions(
-    apiKey: 'AIzaSyAdhDn_2v5Yr4LfSrTeUNo_g6piS74vmH8', // apiKey del archivo google-services.json
-    appId: '1:319211347055:android:025404d955d15bd182419a', // appId del archivo google-services.json
-    messagingSenderId: '319211347055', // project_number (senderId) del archivo google-services.json
-    projectId: 'toimaginemos', // projectId del archivo google-services.json
-    storageBucket: 'toimaginemos.firebasestorage.app', // storageBucket del archivo google-services.json
+    apiKey: 'AIzaSyAdhDn_2v5Yr4LfSrTeUNo_g6piS74vmH8',
+    appId: '1:319211347055:android:025404d955d15bd182419a',
+    messagingSenderId: '319211347055',
+    projectId: 'toimaginemos',
+    storageBucket: 'toimaginemos.firebasestorage.app',
   );
 
-  // Inicializa Firebase usando las opciones proporcionadas
   await Firebase.initializeApp(options: firebaseOptions);
 
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthService()), // Proveedor para AuthService
-        // Otros proveedores si los necesitas
+        ChangeNotifierProvider(create: (_) => AuthService()),
       ],
       child: MyApp(),
     ),
@@ -40,7 +38,6 @@ class AppState extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: ( _ ) => AuthService() ),
-        //ChangeNotifierProvider(create: ( _ ) => ProductsService() ),
       ],
       child: MyApp(),
     );
@@ -62,7 +59,6 @@ class MyApp extends StatelessWidget {
         'register': ( _ ) => RegisterScreen(),
         'note'    : ( _ ) => NoteScreen(),
       },
-      scaffoldMessengerKey: NotificationsService.messengerKey,
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: Colors.grey[300],
         appBarTheme: AppBarTheme(

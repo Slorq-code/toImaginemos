@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:to_imaginemos_app/BLoC/notes/notes_service.dart';
 import 'package:to_imaginemos_app/models/models.dart';
-import 'package:to_imaginemos_app/services/services.dart';
 
 class NoteScreen extends StatefulWidget {
-  final Note? note; // Parámetro opcional para recibir la nota a editar
+  final Note? note;
 
-  const NoteScreen({super.key, this.note}); // Constructor modificado
+  const NoteScreen({super.key, this.note});
 
   @override
   _NoteScreenState createState() => _NoteScreenState();
@@ -14,18 +14,13 @@ class NoteScreen extends StatefulWidget {
 class _NoteScreenState extends State<NoteScreen> {
   final _formKey = GlobalKey<FormState>();
   final NoteService _noteService = NoteService();
-
-  // Controladores para los campos de texto
   late TextEditingController _titleController;
   late TextEditingController _bodyController;
-
-  // Controlador para la categoría
   String? _selectedCategory;
 
   @override
   void initState() {
     super.initState();
-    // Inicializar controladores con los valores de la nota si existe
     _titleController = TextEditingController(text: widget.note?.title ?? '');
     _bodyController = TextEditingController(text: widget.note?.body ?? '');
 
@@ -40,7 +35,7 @@ class _NoteScreenState extends State<NoteScreen> {
       appBar: AppBar(
         title: Text(widget.note == null
             ? 'Nueva Nota'
-            : 'Editar Nota'), // Título dinámico
+            : 'Editar Nota'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -48,7 +43,6 @@ class _NoteScreenState extends State<NoteScreen> {
           key: _formKey,
           child: Column(
             children: [
-              // Título
               TextFormField(
                 controller: _titleController,
                 decoration: const InputDecoration(labelText: 'Título'),
@@ -60,33 +54,25 @@ class _NoteScreenState extends State<NoteScreen> {
                 },
               ),
               const SizedBox(height: 16.0),
-
-              // Categoría
               DropdownButtonFormField<String>(
                 value: _selectedCategory,
                 onChanged: (String? newValue) {
                   setState(() {
-                    print(
-                        "********************************************************");
-                    print("newValue: $newValue");
                     _selectedCategory = newValue!;
-                    print("_selectedCategory: $_selectedCategory");
-                    print(
-                        "********************************************************");
                   });
                 },
                 items: const [
                   DropdownMenuItem(
                     value: 'personal',
-                    child: Text('personal'),
+                    child: Text('Personal'),
                   ),
                   DropdownMenuItem(
                     value: 'trabajo',
-                    child: Text('trabajo'),
+                    child: Text('Trabajo'),
                   ),
                   DropdownMenuItem(
                     value: 'idea',
-                    child: Text('idea'),
+                    child: Text('Idea'),
                   ),
                 ],
                 decoration: const InputDecoration(labelText: 'Categoría'),
@@ -99,11 +85,10 @@ class _NoteScreenState extends State<NoteScreen> {
               ),
               const SizedBox(height: 20.0),
 
-              // Contenido
               TextFormField(
                 controller: _bodyController,
                 decoration: const InputDecoration(labelText: 'Contenido'),
-                maxLines: 5,
+                maxLines: 12,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor ingresa el contenido';
@@ -111,13 +96,10 @@ class _NoteScreenState extends State<NoteScreen> {
                   return null;
                 },
               ),
-              const SizedBox(height: 16.0),
-
-              // Botón para guardar o actualizar la nota
+              const SizedBox(height: 36.0),
               ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    print("_selectedCategory: $_selectedCategory");
                     final noteData = Note(
                       id: widget.note?.id ?? '',
                       title: _titleController.text,
@@ -125,27 +107,19 @@ class _NoteScreenState extends State<NoteScreen> {
                       creationDate: widget.note?.creationDate ?? DateTime.now(),
                       modificationDate: DateTime.now(),
                       uid: widget.note?.uid ?? '', 
-                      category: _selectedCategory!, // Asignar la categoría seleccionada
+                      category: _selectedCategory!,
                     );
 
-                    print("===================================================");
-                    print(noteData);
-                    print("===================================================");
-
                     if (widget.note == null) {
-                      print("entre en if");
-                      // Crear una nueva nota
                       await _noteService.addNote(noteData);
                     } else {
-                      print("entre en else");
-                      // Actualizar la nota existente
                       await _noteService.updateNote(noteData);
                     }
-                    Navigator.pop(context); // Volver a la pantalla anterior
+                    Navigator.pop(context);
                   }
                 },
                 child: Text(
-                    widget.note == null ? 'Guardar Nota' : 'Actualizar Nota'),
+                    widget.note == null ? 'Guardar' : 'Actualizar'),
               ),
             ],
           ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:to_imaginemos_app/BLoC/auth/auth_service.dart';
 import 'package:to_imaginemos_app/providers/login_form_provider.dart';
-import 'package:to_imaginemos_app/services/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:to_imaginemos_app/ui/input_decorations.dart';
@@ -75,7 +75,7 @@ class _LoginForm extends StatelessWidget {
             autocorrect: false,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecorations.authInputDecoration(
-              hintText: 'ejemplo@contrataaAndres.com ;)',
+              hintText: 'contrata@aAndres.com ;)',
               labelText: 'Correo electrónico',
               prefixIcon: Icons.alternate_email_rounded
             ),
@@ -99,7 +99,7 @@ class _LoginForm extends StatelessWidget {
             obscureText: true,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecorations.authInputDecoration(
-              hintText: 'el secreto es contratar a Andres ;)',
+              hintText: '********',
               labelText: 'Contraseña',
               prefixIcon: Icons.lock_outline
             ),
@@ -133,9 +133,6 @@ class _LoginForm extends StatelessWidget {
               if ( errorMessage == null ) {
                 Navigator.pushReplacementNamed(context, 'home');
               } else {
-    
-                // print( errorMessage );
-                NotificationsService.showSnackbar(errorMessage);
                 loginForm.isLoading = false;
               }
             },

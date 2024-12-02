@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:to_imaginemos_app/BLoC/notes/notes_service.dart';
 import 'package:to_imaginemos_app/models/models.dart';
 import 'package:to_imaginemos_app/screens/note_screen.dart'; // Importa NoteScreen
-import 'package:to_imaginemos_app/services/services.dart';
 import 'package:intl/intl.dart';
 
 class NoteCard extends StatelessWidget {

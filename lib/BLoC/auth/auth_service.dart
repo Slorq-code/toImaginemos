@@ -46,10 +46,10 @@ class AuthService extends ChangeNotifier {
     final resp = await http.post(url, body: json.encode(authData));
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
 
-    print("=============================================");
+    //print("=============================================");
     // Imprimir todos los parámetros de la respuesta
-    print("UID almacenado: ${decodedResp['localId']}");
-    print("=============================================");
+    //print("UID almacenado: ${decodedResp['localId']}");
+    //print("=============================================");
 
     if (decodedResp.containsKey('idToken')) {
       //await storage.write(key: 'token', value: decodedResp['idToken']);
@@ -67,9 +67,9 @@ class AuthService extends ChangeNotifier {
 
   Future<String> readUid() async {
     String? uid = await storage.read(key: 'uid');
-    print("=============================================");
-    print("UID recuperado: $uid");
-    print("=============================================");
+    //print("=============================================");
+    //print("UID recuperado: $uid");
+    //print("=============================================");
     return uid ?? '';
   }
 }

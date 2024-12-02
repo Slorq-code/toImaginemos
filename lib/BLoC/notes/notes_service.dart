@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:to_imaginemos_app/models/models.dart';
-import 'package:to_imaginemos_app/services/auth_service.dart';
+import 'package:to_imaginemos_app/BLoC/auth/auth_service.dart';
 
 class NoteService {
   final CollectionReference _notesCollection =
@@ -9,9 +9,9 @@ class NoteService {
 
   Future<String?> _getUserUid() async {
     String? userUid = await _authService.readUid();
-    print("=============================================");
-    print("UID en NoteService: $userUid");
-    print("=============================================");
+    //print("=============================================");
+    //print("UID en NoteService: $userUid");
+    //print("=============================================");
     return userUid;
   }
 
@@ -26,14 +26,14 @@ Stream<List<Note>> getNotes({String? category}) async* {
     }
 
     yield* query.snapshots().map((snapshot) {
-      print("Número de notas recuperadas: ${snapshot.docs.length}");
+      //print("Número de notas recuperadas: ${snapshot.docs.length}");
       return snapshot.docs.map((doc) {
-        print("Datos de la nota: ${doc.data()}");
+        //print("Datos de la nota: ${doc.data()}");
         return Note.fromFirestore(doc.data() as Map<String, dynamic>, doc.id);
       }).toList();
     });
   } else {
-    print("Usuario no autenticado. No se pueden recuperar las notas.");
+    //print("Usuario no autenticado. No se pueden recuperar las notas.");
     yield [];
   }
 }
@@ -41,11 +41,11 @@ Stream<List<Note>> getNotes({String? category}) async* {
   Future<void> addNote(Note note) async {
     final String? userUid = await _getUserUid();
 
-    print("===============================================================");
-    print("ESTOY EN addNote");
-    print(userUid);
-    print("note, $note");
-    print("===============================================================");
+    //print("===============================================================");
+    //print("ESTOY EN addNote");
+    //print(userUid);
+    //print("note, $note");
+    //print("===============================================================");
 
     if (userUid != null) {
       final noteWithUid = Note(
@@ -59,7 +59,7 @@ Stream<List<Note>> getNotes({String? category}) async* {
       );
       await _notesCollection.add(noteWithUid.toFirestore());
     } else {
-      print("Usuario no autenticado. No se puede agregar la nota.");
+      //print("Usuario no autenticado. No se puede agregar la nota.");
     }
   }
 
