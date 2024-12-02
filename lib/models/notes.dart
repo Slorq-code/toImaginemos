@@ -48,4 +48,11 @@ class Note {
       'uid': uid,
     };
   }
+
+    // Método toString personalizado
+  @override
+  String toString() {
+    return 'Note { id: $id, title: $title, body: $body, creationDate: $creationDate, modificationDate: $modificationDate, uid: $uid, category: $category }';
+  }
+  
 }

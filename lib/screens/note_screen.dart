@@ -30,7 +30,7 @@ class _NoteScreenState extends State<NoteScreen> {
     _bodyController = TextEditingController(text: widget.note?.body ?? '');
 
     if (widget.note != null) {
-      _selectedCategory = widget.note?.category;
+      _selectedCategory = widget.note!.category;
     }
   }
 
@@ -69,7 +69,7 @@ class _NoteScreenState extends State<NoteScreen> {
                     print(
                         "********************************************************");
                     print("newValue: $newValue");
-                    _selectedCategory = newValue;
+                    _selectedCategory = newValue!;
                     print("_selectedCategory: $_selectedCategory");
                     print(
                         "********************************************************");
@@ -117,22 +117,27 @@ class _NoteScreenState extends State<NoteScreen> {
               ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
+                    print("_selectedCategory: $_selectedCategory");
                     final noteData = Note(
                       id: widget.note?.id ?? '',
                       title: _titleController.text,
                       body: _bodyController.text,
                       creationDate: widget.note?.creationDate ?? DateTime.now(),
                       modificationDate: DateTime.now(),
-                      uid: widget.note?.uid ??
-                          '', // Asegúrate de que el UID esté presente
-                      category:
-                          _selectedCategory!, // Asignar la categoría seleccionada
+                      uid: widget.note?.uid ?? '', 
+                      category: _selectedCategory!, // Asignar la categoría seleccionada
                     );
 
+                    print("===================================================");
+                    print(noteData);
+                    print("===================================================");
+
                     if (widget.note == null) {
+                      print("entre en if");
                       // Crear una nueva nota
                       await _noteService.addNote(noteData);
                     } else {
+                      print("entre en else");
                       // Actualizar la nota existente
                       await _noteService.updateNote(noteData);
                     }
