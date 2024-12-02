@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:to_imaginemos_app/BLoC/notes/notes_service.dart';
+import 'package:to_imaginemos_app/BLoC/notes/notes_bloc.dart';
 import 'package:to_imaginemos_app/models/models.dart';
 import 'package:to_imaginemos_app/screens/note_screen.dart';
 import 'package:to_imaginemos_app/widgets/widgets.dart';
@@ -15,7 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final NoteService _noteService = NoteService();
   String? _selectedCategory = 'todas';
   final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = ''; // Almacena el texto de búsqueda
+  String _searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Row(
                       children: [
                         Icon(Icons.person,
-                            color: Colors.blue), // Ícono para "personal"
-                        SizedBox(width: 8), // Espaciado entre ícono y texto
+                            color: Colors.blue), 
+                        SizedBox(width: 8), 
                         Text('Personal'),
                       ],
                     ),
@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Row(
                       children: [
                         Icon(Icons.work,
-                            color: Colors.green), // Ícono para "trabajo"
+                            color: Colors.green),
                         SizedBox(width: 8),
                         Text('Trabajo'),
                       ],
@@ -77,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Row(
                       children: [
                         Icon(Icons.lightbulb_outline,
-                            color: Colors.orange), // Ícono para "idea"
+                            color: Colors.orange), 
                         SizedBox(width: 8),
                         Text('Idea'),
                       ],
@@ -88,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Row(
                       children: [
                         Icon(Icons.all_inclusive,
-                            color: Colors.purple), // Ícono para "todas"
+                            color: Colors.purple), 
                         SizedBox(width: 8),
                         Text('Todas'),
                       ],
@@ -108,7 +108,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Column(
         children: [
-          // Barra de búsqueda
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
@@ -123,12 +122,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               onChanged: (value) {
                 setState(() {
-                  _searchQuery = value; // Actualiza la búsqueda
+                  _searchQuery = value; 
                 });
               },
             ),
           ),
-          // Lista de notas
           Expanded(
             child: StreamBuilder<List<Note>>(
               stream: _noteService.getNotes(category: _selectedCategory),
@@ -137,14 +135,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
                 }
-                // Filtra las notas basadas en la consulta de búsqueda
                 final notes = snapshot.data!.where((note) {
                   final query = _searchQuery.toLowerCase();
                   return note.title.toLowerCase().contains(query) ||
                       note.body.toLowerCase().contains(query);
                 }).toList();
-
-                // Muestra un mensaje si no hay coincidencias
                 if (notes.isEmpty) {
                   return Center(child: Text('no hay notas por aqui...'));
                 }

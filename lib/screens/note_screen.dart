@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:to_imaginemos_app/BLoC/notes/notes_service.dart';
+import 'package:to_imaginemos_app/BLoC/notes/notes_bloc.dart';
 import 'package:to_imaginemos_app/models/models.dart';
 
 class NoteScreen extends StatefulWidget {
@@ -84,7 +84,6 @@ class _NoteScreenState extends State<NoteScreen> {
                 },
               ),
               const SizedBox(height: 20.0),
-
               TextFormField(
                 controller: _bodyController,
                 decoration: const InputDecoration(labelText: 'Contenido'),
@@ -109,7 +108,6 @@ class _NoteScreenState extends State<NoteScreen> {
                       uid: widget.note?.uid ?? '', 
                       category: _selectedCategory!,
                     );
-
                     if (widget.note == null) {
                       await _noteService.addNote(noteData);
                     } else {

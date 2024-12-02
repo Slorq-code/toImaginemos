@@ -7,7 +7,18 @@ import 'package:http/http.dart' as http;
 
 class AuthService extends ChangeNotifier {
   final String _baseUrl = 'identitytoolkit.googleapis.com';
+
+
+
+
+
+  // KEY DE FIREBASE
   final String _firebaseToken = 'AIzaSyBr-dkmURKIaOdVkAcspeZLHJ8K_PMGyPI';
+
+
+
+
+
 
   final storage = FlutterSecureStorage();
   
@@ -42,17 +53,9 @@ class AuthService extends ChangeNotifier {
 
     final url = Uri.https(
         _baseUrl, '/v1/accounts:signInWithPassword', {'key': _firebaseToken});
-
     final resp = await http.post(url, body: json.encode(authData));
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
-
-    //print("=============================================");
-    // Imprimir todos los parámetros de la respuesta
-    //print("UID almacenado: ${decodedResp['localId']}");
-    //print("=============================================");
-
     if (decodedResp.containsKey('idToken')) {
-      //await storage.write(key: 'token', value: decodedResp['idToken']);
       await storage.write(key: 'uid', value: decodedResp['localId']);
       return null;
     } else {
@@ -67,9 +70,6 @@ class AuthService extends ChangeNotifier {
 
   Future<String> readUid() async {
     String? uid = await storage.read(key: 'uid');
-    //print("=============================================");
-    //print("UID recuperado: $uid");
-    //print("=============================================");
     return uid ?? '';
   }
 }

@@ -6,13 +6,12 @@ class Note {
   String body;
   DateTime creationDate;
   DateTime modificationDate;
-  String category; // Nuevo campo para la categoría
+  String category; 
   String uid;
 
-  // Constructor con id opcional
   Note({
-    this.id = '', // O algún valor por defecto
-    this.category = 'personal', // Valor por defecto para la categoría
+    this.id = '', 
+    this.category = 'personal',
     required this.title,
     required this.body,
     required this.creationDate,
@@ -20,7 +19,6 @@ class Note {
     required this.uid,
   });
 
-  // Método para convertir de Firestore a Note
   factory Note.fromFirestore(Map<String, dynamic> firestoreData, String id) {
     return Note(
       id: id,
@@ -28,28 +26,26 @@ class Note {
       body: firestoreData['body'],
       creationDate: firestoreData['creationDate'] is Timestamp
           ? (firestoreData['creationDate'] as Timestamp).toDate()
-          : DateTime.parse(firestoreData['creationDate']), // Convertir de String a DateTime si es String
+          : DateTime.parse(firestoreData['creationDate']),
       modificationDate: firestoreData['modificationDate'] is Timestamp
           ? (firestoreData['modificationDate'] as Timestamp).toDate()
-          : DateTime.parse(firestoreData['modificationDate']), // Convertir de String a DateTime si es String
+          : DateTime.parse(firestoreData['modificationDate']), 
       uid: firestoreData['uid'],
-      category: firestoreData['category'], // Recuperar categoría o asignar valor por defecto
+      category: firestoreData['category'],
     );
   }
 
-  // Método para convertir de Note a Firestore
   Map<String, dynamic> toFirestore() {
     return {
       'title': title,
       'body': body,
-      'creationDate': Timestamp.fromDate(creationDate), // Convertir DateTime a Timestamp
-      'modificationDate': Timestamp.fromDate(modificationDate), // Convertir DateTime a Timestamp
-      'category': category, // Incluir la categoría en Firestore
+      'creationDate': Timestamp.fromDate(creationDate),
+      'modificationDate': Timestamp.fromDate(modificationDate),
+      'category': category, 
       'uid': uid,
     };
   }
-
-    // Método toString personalizado
+  
   @override
   String toString() {
     return 'Note { id: $id, title: $title, body: $body, creationDate: $creationDate, modificationDate: $modificationDate, uid: $uid, category: $category }';
